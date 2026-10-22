@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HandPlay | Rock Paper Scissors</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head><body>
+<nav class="navbar"><div class="container nav-inner"><a class="brand" href="/"> <span class="mark">H</span> HandPlay</a><span class="tagline">A little game. A lot of fun.</span></div></nav>
+<main class="container page">
+<header class="hero"><div class="eyebrow"><i></i> QUICK PLAY · BEST OF LUCK</div><h1>Rock. Paper. <span>Scissors.</span></h1><p>Make your move and see if you can outsmart the computer.</p></header>
+<section class="scores">
+<div class="score"><small>YOUR WINS</small><strong>{{ game.player }}</strong><span>Player</span></div>
+<div class="score"><small>DRAWS</small><strong>{{ game.draws }}</strong><span>Even match</span></div>
+<div class="score"><small>COMPUTER WINS</small><strong>{{ game.computer }}</strong><span>Opponent</span></div>
+<div class="score"><small>ROUNDS PLAYED</small><strong>{{ game.rounds }}</strong><span>Total rounds</span></div>
+</section>
+<section class="panel"><div class="panel-head"><div><small class="kicker">MAKE YOUR MOVE</small><h2>Choose your hand</h2></div><span class="pill">Round {{ game.rounds + 1 }}</span></div>
+{% if result %}<div class="result {{ result }}"><strong>{% if result == 'win' %}You won this round!{% elif result == 'lose' %}Computer won this round!{% else %}It's a draw!{% endif %}</strong><div class="versus"><div>{{ emoji[player_choice] }}<small>You · {{ player_choice|title }}</small></div><b>VS</b><div>{{ emoji[computer_choice] }}<small>Computer · {{ computer_choice|title }}</small></div></div></div>{% endif %}
+<form method="post" class="choices">
+{% for choice in ['rock','paper','scissors'] %}<button type="submit" name="choice" value="{{ choice }}" class="choice"><span class="hand">{{ emoji[choice] }}</span><b>{{ choice|title }}</b><small>{% if choice == 'rock' %}Crushes scissors{% elif choice == 'paper' %}Covers rock{% else %}Cuts paper{% endif %}</small></button>{% endfor %}
+</form><div class="tip"><b>TIP</b> Rock beats scissors · Paper beats rock · Scissors beats paper</div></section>
+<section class="panel history"><div class="panel-head"><div><small class="kicker">YOUR GAME</small><h2>Recent rounds</h2></div><form method="post"><button class="reset" name="action" value="reset">↻ Reset game</button></form></div>
+{% if game.history %}<div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>ROUND</th><th>YOU</th><th>COMPUTER</th><th>RESULT</th></tr></thead><tbody>{% for item in game.history %}<tr><td>#{{ item.round }}</td><td>{{ emoji[item.player] }} {{ item.player|title }}</td><td>{{ emoji[item.computer] }} {{ item.computer|title }}</td><td><span class="chip {{ item.result }}">{{ item.result|title }}</span></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty"><strong>No rounds played yet</strong><p>Choose rock, paper, or scissors to start your first round.</p></div>{% endif %}</section>
+<footer>Built with Python & Flask <span>·</span> InfozaTech Internship · Task 2</footer></main></body></html>

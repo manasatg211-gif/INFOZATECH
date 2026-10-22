@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeyCraft | Password Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/"><span class="brand-icon">K</span> keycraft</a>
+  <span class="top-label">SECURITY TOOLKIT</span>
+</header>
+
+<main class="layout">
+  <section class="intro">
+    <p class="eyebrow">A STRONGER FIRST LINE OF DEFENCE</p>
+    <h1>Passwords made<br><em>strong and simple.</em></h1>
+    <p class="subtitle">Create a unique password with the character types and length you choose. Your password is generated when you submit this form.</p>
+    <div class="feature-row"><span>✓ Secure random generation</span><span>✓ Customisable</span></div>
+    <div class="security-note"><span class="shield">✓</span><div><strong>Your security matters</strong><p>Use a unique password for every account. Store it in a trusted password manager.</p></div></div>
+  </section>
+
+  <section class="generator-card">
+    <div class="card-title"><div><p class="eyebrow">PASSWORD GENERATOR</p><h2>Build your password</h2></div><span class="lock">⌑</span></div>
+    {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+    <form method="post">
+      <div class="length-heading"><label for="length">Password length</label><strong id="lengthValue">{{ length }}</strong></div>
+      <input class="range" id="length" name="length" type="range" min="8" max="64" value="{{ length }}" oninput="document.getElementById('lengthValue').textContent=this.value">
+      <div class="range-labels"><span>8 characters</span><span>64 characters</span></div>
+
+      <p class="options-heading">Include character types</p>
+      <div class="options-grid">
+        <label class="option"><input type="checkbox" name="uppercase" {% if options.uppercase %}checked{% endif %}><span class="fake-check">✓</span><span><b>Uppercase</b><small>A – Z</small></span></label>
+        <label class="option"><input type="checkbox" name="lowercase" {% if options.lowercase %}checked{% endif %}><span class="fake-check">✓</span><span><b>Lowercase</b><small>a – z</small></span></label>
+        <label class="option"><input type="checkbox" name="numbers" {% if options.numbers %}checked{% endif %}><span class="fake-check">✓</span><span><b>Numbers</b><small>0 – 9</small></span></label>
+        <label class="option"><input type="checkbox" name="symbols" {% if options.symbols %}checked{% endif %}><span class="fake-check">✓</span><span><b>Symbols</b><small>! @ # $ %</small></span></label>
+      </div>
+      <button class="generate-btn" type="submit">Generate password <span>→</span></button>
+    </form>
+
+    {% if password %}
+    <section class="result" aria-live="polite">
+      <div class="result-heading"><div><p class="eyebrow">YOUR NEW PASSWORD</p><h3>Ready to use</h3></div><span class="status">GENERATED</span></div>
+      <div class="password-box"><code id="generatedPassword">{{ password }}</code><button type="button" class="copy-btn" onclick="copyPassword()" aria-label="Copy password">Copy</button></div>
+      <p class="copy-feedback" id="copyFeedback" aria-live="polite">Keep it private and don't reuse it across accounts.</p>
+    </section>
+    {% else %}
+    <div class="empty-state"><span>✳</span><p>Your generated password will appear here.</p></div>
+    {% endif %}
+  </section>
+</main>
+<footer><b>keycraft</b><span>Think secure. Stay secure.</span></footer>
+<script>
+function copyPassword() {
+  const text = document.getElementById("generatedPassword").textContent;
+  const feedback = document.getElementById("copyFeedback");
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      feedback.textContent = "Password copied. Keep it private!";
+    }).catch(() => fallbackCopy(text, feedback));
+  } else {
+    fallbackCopy(text, feedback);
+  }
+}
+function fallbackCopy(text, feedback) {
+  const field = document.createElement("textarea");
+  field.value = text;
+  field.style.position = "fixed";
+  field.style.opacity = "0";
+  document.body.appendChild(field);
+  field.select();
+  try {
+    const ok = document.execCommand("copy");
+    feedback.textContent = ok ? "Password copied. Keep it private!" : "Copy wasn't available. Select the password and copy it manually.";
+  } catch (e) {
+    feedback.textContent = "Select the password and copy it manually.";
+  }
+  field.remove();
+}
+</script>
+</body>
+</html>

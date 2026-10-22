@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Connectly | Contact Book</title><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}"></head>
+<body><header><a class="brand" href="/"><span>C</span> connectly</a><small>PERSONAL CONTACTS</small></header>
+<main><section class="hero"><p class="eyebrow">YOUR PEOPLE, ORGANIZED</p><h1>Every connection,<br><em>all in one place.</em></h1><p class="sub">Keep the people and details that matter close at hand.</p></section>
+{% with messages=get_flashed_messages(with_categories=true) %}{% for cat,msg in messages %}<p class="flash {{cat}}">{{msg}}</p>{% endfor %}{% endwith %}
+<div class="layout"><section class="panel"><div class="paneltitle"><div><p class="eyebrow">CONTACT DIRECTORY</p><h2>Your contacts <span class="count">{{ contacts|length }}</span></h2></div></div>
+<form class="search" method="get"><input name="q" value="{{q}}" placeholder="Search name, email, phone or company..."><button>Search</button></form>
+{% if contacts %}<div class="list">{% for c in contacts %}<article class="contact"><div class="avatar">{{c.name[:1]|upper}}</div><div class="details"><h3>{{c.name}}</h3>{% if c.company %}<p>{{c.company}}</p>{% endif %}{% if c.email %}<small>✉ {{c.email}}</small>{% endif %}{% if c.phone %}<small>☎ {{c.phone}}</small>{% endif %}{% if c.notes %}<small class="notes">{{c.notes}}</small>{% endif %}</div><form method="post" action="{{url_for('delete',cid=c.id)}}" onsubmit="return confirm('Delete this contact?')"><button class="delete" title="Delete contact">×</button></form></article>{% endfor %}</div>
+{% else %}<div class="empty"><div>◎</div><h3>{% if q %}No matching contacts{% else %}Your contact book starts here{% endif %}</h3><p>{% if q %}Try another search or clear it.{% else %}Add your first contact with the form. It will appear here for easy searching.{% endif %}</p>{% if q %}<a href="/">Clear search</a>{% endif %}</div>{% endif %}</section>
+<aside class="panel add"><p class="eyebrow">NEW ENTRY</p><h2>Add a contact</h2><form method="post" action="/add">
+<label>Full name <b>*</b><input name="name" placeholder="e.g. Asha Rao" maxlength="100" required></label>
+<label>Email address<input name="email" type="email" placeholder="asha@example.com" maxlength="150"></label>
+<label>Phone number<input name="phone" type="tel" placeholder="+91 98765 43210" maxlength="30"></label>
+<label>Company or organization<input name="company" placeholder="e.g. Acme Studio" maxlength="100"></label>
+<label>Notes <small>optional</small><textarea name="notes" rows="3" placeholder="Anything to remember?" maxlength="500"></textarea></label>
+<button class="primary" type="submit">Save contact →</button><p class="privacy">Saved locally in this project folder.</p></form></aside></div></main>
+<footer><b>connectly</b><span>Keep every connection within reach.</span></footer></body></html>

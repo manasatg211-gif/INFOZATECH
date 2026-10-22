@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BMI Calculator | InfozaTech Task 3</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="page">
+    <section class="calculator">
+      <p class="eyebrow">INFOZATECH · TASK 03</p>
+      <h1>BMI Calculator</h1>
+      <p class="intro">Enter your height and weight to calculate your Body Mass Index.</p>
+      <form method="post">
+        <label for="height">Height <span>(cm)</span></label>
+        <input id="height" name="height" type="number" min="1" step="any" placeholder="e.g. 165" required>
+        <label for="weight">Weight <span>(kg)</span></label>
+        <input id="weight" name="weight" type="number" min="1" step="any" placeholder="e.g. 58" required>
+        <button type="submit">Calculate BMI <span aria-hidden="true">→</span></button>
+      </form>
+      {% if error %}<p class="message error">{{ error }}</p>{% endif %}
+      {% if bmi is not none %}
+      <section class="result" aria-live="polite">
+        <p class="result-label">YOUR BMI</p>
+        <div class="score">{{ bmi }}</div>
+        <p class="category">{{ category }}</p>
+      </section>
+      {% endif %}
+      <p class="note">BMI is a general screening measure and is not a medical diagnosis.</p>
+    </section>
+    <footer>Made with Flask · Python</footer>
+  </main>
+</body>
+</html>
